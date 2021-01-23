@@ -35,14 +35,11 @@ class _GidaUrunleriState extends State<GidaUrunleri> {
     gidaUrunler = [];
     _firebaseFirestore.collection('Ürünler/GidaÜrünleri/Ürünler').get().then((gelenVeri){
       for(int i = 0 ; i<gelenVeri.docs.length ; i++){
-        //debugPrint(gelenVeri.docs[i].data()['Ürün Adı']);
-        okunanUrunID = gelenVeri.docs[i].data()['Ürün ID'];
-        //debugPrint(okunanUrunID);
-        okunanUrunAd = gelenVeri.docs[i].data()['Ürün Adı'];
-        //debugPrint(okunanUrunAd);
-        okunanUrunFiyat = gelenVeri.docs[i].data()['Ürün Fiyatı'];
-        //debugPrint(okunanUrunFiyat);
-        //gecici.add(Urun(ad: okunanUrunAd, fiyat: okunanUrunFiyat, urunID:okunanUrunID));
+        setState(() {
+          okunanUrunID = gelenVeri.docs[i].data()['Ürün ID'];
+          okunanUrunAd = gelenVeri.docs[i].data()['Ürün Adı'];
+          okunanUrunFiyat = gelenVeri.docs[i].data()['Ürün Fiyatı'];
+        });
         gidaUrunler.add(Urun(urunID: okunanUrunID, ad: okunanUrunAd, fiyat: okunanUrunFiyat));
       }
     });

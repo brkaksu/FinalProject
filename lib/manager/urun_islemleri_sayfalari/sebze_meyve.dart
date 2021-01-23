@@ -34,17 +34,20 @@ class _SebzeMeyveState extends State<SebzeMeyve> {
   @override
    initState()  {
     super.initState();
+    Urun(urunID: "asd", );
     for(int i = 0; i<10; i++){
       urunResimler.add(image);
     }
     _firebaseFirestore.collection('Ürünler/SebzeveMeyveler/Ürünler').get().then((gelenVeri){
         for(int i = 0 ; i<gelenVeri.docs.length ; i++){
           //debugPrint(gelenVeri.docs[i].data()['Ürün Adı']);
+          setState(() {
           okunanUrunID = gelenVeri.docs[i].data()['Ürün ID'];
           //debugPrint(okunanUrunID);
           okunanUrunAd = gelenVeri.docs[i].data()['Ürün Adı'];
           //debugPrint(okunanUrunAd);
           okunanUrunFiyat = gelenVeri.docs[i].data()['Ürün Fiyatı'];
+          });
           //debugPrint(okunanUrunFiyat);
           //gecici.add(Urun(ad: okunanUrunAd, fiyat: okunanUrunFiyat, urunID:okunanUrunID));
           sebzeler.add(Urun(urunID: okunanUrunID, ad: okunanUrunAd, fiyat: okunanUrunFiyat));
@@ -56,18 +59,43 @@ class _SebzeMeyveState extends State<SebzeMeyve> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          FloatingActionButton(
+            mini: true,
+            onPressed: (){
+              _firebaseFirestore.collection('Ürünler/SebzeveMeyveler/Ürünler').get().then((gelenVeri){
+                for(int i = 0 ; i<gelenVeri.docs.length ; i++){
+                  setState(() {
+                    okunanUrunID = gelenVeri.docs[i].data()['Ürün ID'];
+                    okunanUrunAd = gelenVeri.docs[i].data()['Ürün Adı'];
+                    okunanUrunFiyat = gelenVeri.docs[i].data()['Ürün Fiyatı'];
+                  });
+                  sebzeler.add(Urun(urunID: okunanUrunID, ad: okunanUrunAd, fiyat: okunanUrunFiyat));
+                }
+              });
+            },
+            heroTag: "update",
+            child: Icon(Icons.arrow_circle_down_rounded),
+          ),
+          SizedBox(height: 530),
+          FloatingActionButton(
+            child: Icon(Icons.add),
+            heroTag: "add",
+            onPressed: () {
+              urunID = (sebzeler.length +1).toString();
+              if(formKey.currentState.validate()){
+                formKey.currentState.save();
+                formKey.currentState.reset();
+              }
+              // Firebase e yeni ürün ekleme işlemi gerçekleşiyor.
+              _firebaseFirestore.collection('Ürünler').doc('SebzeveMeyveler').collection('Ürünler').doc('SM${urunID}').set(sebzeUrunleriGetir());
+              //image = null;
+            },
+          ),
 
-        onPressed: () {
-          urunID = (sebzeler.length +1).toString();
-          if(formKey.currentState.validate()){
-            formKey.currentState.save();
-            formKey.currentState.reset();
-          }
-          _firebaseFirestore.collection('Ürünler').doc('SebzeveMeyveler').collection('Ürünler').doc('SM${urunID}').set(sebzeUrunleriGetir());
-          image = null;
-        },
+        ],
       ),
       appBar: AppBar(
         title: Text("Sebze ve Meyve"),
