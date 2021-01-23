@@ -40,16 +40,11 @@ class _SebzeMeyveState extends State<SebzeMeyve> {
     }
     _firebaseFirestore.collection('Ürünler/SebzeveMeyveler/Ürünler').get().then((gelenVeri){
         for(int i = 0 ; i<gelenVeri.docs.length ; i++){
-          //debugPrint(gelenVeri.docs[i].data()['Ürün Adı']);
           setState(() {
           okunanUrunID = gelenVeri.docs[i].data()['Ürün ID'];
-          //debugPrint(okunanUrunID);
           okunanUrunAd = gelenVeri.docs[i].data()['Ürün Adı'];
-          //debugPrint(okunanUrunAd);
           okunanUrunFiyat = gelenVeri.docs[i].data()['Ürün Fiyatı'];
           });
-          //debugPrint(okunanUrunFiyat);
-          //gecici.add(Urun(ad: okunanUrunAd, fiyat: okunanUrunFiyat, urunID:okunanUrunID));
           sebzeler.add(Urun(urunID: okunanUrunID, ad: okunanUrunAd, fiyat: okunanUrunFiyat));
         }
       });
