@@ -6,6 +6,7 @@ class Urun {
   String fiyat;
   String resmi;
   double odenecekTutar;
+
   Urun({this.urunID,this.ad, this.fiyat, this.resmi, this.odenecekTutar});
 }
 

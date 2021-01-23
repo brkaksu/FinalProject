@@ -35,18 +35,14 @@ class _SutVeSutUrunleriState extends State<SutVeSutUrunleri> {
     sutUrunler = [];
     _firebaseFirestore.collection('Ürünler/SütÜrünleri/Ürünler').get().then((gelenVeri){
       for(int i = 0 ; i<gelenVeri.docs.length ; i++){
-        //debugPrint(gelenVeri.docs[i].data()['Ürün Adı']);
-        okunanUrunID = gelenVeri.docs[i].data()['Ürün ID'];
-        //debugPrint(okunanUrunID);
-        okunanUrunAd = gelenVeri.docs[i].data()['Ürün Adı'];
-        //debugPrint(okunanUrunAd);
-        okunanUrunFiyat = gelenVeri.docs[i].data()['Ürün Fiyatı'];
-        //debugPrint(okunanUrunFiyat);
-        //gecici.add(Urun(ad: okunanUrunAd, fiyat: okunanUrunFiyat, urunID:okunanUrunID));
+        setState(() {
+          okunanUrunID = gelenVeri.docs[i].data()['Ürün ID'];
+          okunanUrunAd = gelenVeri.docs[i].data()['Ürün Adı'];
+          okunanUrunFiyat = gelenVeri.docs[i].data()['Ürün Fiyatı'];
+        });
         sutUrunler.add(Urun(urunID: okunanUrunID, ad: okunanUrunAd, fiyat: okunanUrunFiyat));
       }
     });
-    //urunResimler = [];
   }
   @override
   Widget build(BuildContext context) {

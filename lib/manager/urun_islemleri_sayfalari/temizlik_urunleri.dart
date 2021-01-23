@@ -35,14 +35,11 @@ class _TemizlikUrunleriState extends State<TemizlikUrunleri> {
     temizlikUrunler = [];
     _firebaseFirestore.collection('Ürünler/TemizlikÜrünleri/Ürünler').get().then((gelenVeri){
       for(int i = 0 ; i<gelenVeri.docs.length ; i++){
-        //debugPrint(gelenVeri.docs[i].data()['Ürün Adı']);
-        okunanUrunID = gelenVeri.docs[i].data()['Ürün ID'];
-        //debugPrint(okunanUrunID);
-        okunanUrunAd = gelenVeri.docs[i].data()['Ürün Adı'];
-        //debugPrint(okunanUrunAd);
-        okunanUrunFiyat = gelenVeri.docs[i].data()['Ürün Fiyatı'];
-        //debugPrint(okunanUrunFiyat);
-        //gecici.add(Urun(ad: okunanUrunAd, fiyat: okunanUrunFiyat, urunID:okunanUrunID));
+        setState(() {
+          okunanUrunID = gelenVeri.docs[i].data()['Ürün ID'];
+          okunanUrunAd = gelenVeri.docs[i].data()['Ürün Adı'];
+          okunanUrunFiyat = gelenVeri.docs[i].data()['Ürün Fiyatı'];
+        });
         temizlikUrunler.add(Urun(urunID: okunanUrunID, ad: okunanUrunAd, fiyat: okunanUrunFiyat));
       }
     });
@@ -240,14 +237,12 @@ class _TemizlikUrunleriState extends State<TemizlikUrunleri> {
             child: Text("Kaydet"),
             color: Colors.blue,
             onPressed: (){
-              setState(() {
                 formKey.currentState.save();
                 //debugPrint(urunID + "--" + urunAdi + "--" + urunFiyat);
                 _firebaseFirestore.collection('Ürünler').doc('TemizlikÜrünleri').collection('Ürünler').doc('TM${temizlikUrunler[index].urunID}').update({
                   'Ürün Adı' : '${urunAdi}',
                   'Ürün Fiyatı' : '${urunFiyat}',
                   'Ürün ID' : '${urunID}',
-                });
               });
             },
           ),

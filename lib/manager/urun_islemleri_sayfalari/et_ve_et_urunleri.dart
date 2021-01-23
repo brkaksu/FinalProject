@@ -15,6 +15,7 @@ class EtveEtUrunleri extends StatefulWidget {
 
 class _EtveEtUrunleriState extends State<EtveEtUrunleri> {
   FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+
   TextEditingController urunAdController = TextEditingController();
   TextEditingController urunFiyatController = TextEditingController();
   String urunID = "";
@@ -35,21 +36,14 @@ class _EtveEtUrunleriState extends State<EtveEtUrunleri> {
   void initState() {
     super.initState();
     etUrunler = [];
-    _firebaseFirestore
-        .collection('Ürünler/EtÜrünleri/Ürünler')
-        .get()
-        .then((gelenVeri) {
+    _firebaseFirestore.collection('Ürünler/EtÜrünleri/Ürünler').get().then((gelenVeri) {
       for (int i = 0; i < gelenVeri.docs.length; i++) {
-        //debugPrint(gelenVeri.docs[i].data()['Ürün Adı']);
-        okunanUrunID = gelenVeri.docs[i].data()['Ürün ID'];
-        //debugPrint(okunanUrunID);
-        okunanUrunAd = gelenVeri.docs[i].data()['Ürün Adı'];
-        //debugPrint(okunanUrunAd);
-        okunanUrunFiyat = gelenVeri.docs[i].data()['Ürün Fiyatı'];
-        //debugPrint(okunanUrunFiyat);
-        //gecici.add(Urun(ad: okunanUrunAd, fiyat: okunanUrunFiyat, urunID:okunanUrunID));
-        etUrunler.add(Urun(
-            urunID: okunanUrunID, ad: okunanUrunAd, fiyat: okunanUrunFiyat));
+        setState(() {
+          okunanUrunID = gelenVeri.docs[i].data()['Ürün ID'];
+          okunanUrunAd = gelenVeri.docs[i].data()['Ürün Adı'];
+          okunanUrunFiyat = gelenVeri.docs[i].data()['Ürün Fiyatı'];
+        });
+        etUrunler.add(Urun(urunID: okunanUrunID, ad: okunanUrunAd, fiyat: okunanUrunFiyat));
       }
     });
     //urunResimler = [];
@@ -286,8 +280,8 @@ class _EtveEtUrunleriState extends State<EtveEtUrunleri> {
             child: Text("Kaydet"),
             color: Colors.blue,
             onPressed: (){
-              setState(() {
                 formKey.currentState.save();
+              setState(() {
                 //debugPrint(urunID + "--" + urunAdi + "--" + urunFiyat);
                 _firebaseFirestore.collection('Ürünler').doc('EtÜrünleri').collection('Ürünler').doc('ET${etUrunler[index].urunID}').update({
                   'Ürün Adı' : '${urunAdi}',

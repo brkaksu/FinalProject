@@ -138,6 +138,11 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
                   onPressed: (){
                      Navigator.push(context, MaterialPageRoute(builder: (context) => UyeOl(_auth)));
                   }),
+              RaisedButton(
+                child: Text("Çıkış Yap"),
+                onPressed: _cikisYap,
+                color: Colors.deepOrange,
+              ),
 
 
 
@@ -151,7 +156,6 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
   void _emailSifreKullaniciOlustur() async {
     String _email = "hakan.dursun@bil.omu.edu.tr";
     String _password = "password";
-
     try {
       UserCredential _credential = await _auth.createUserWithEmailAndPassword(
           email: _email, password: _password);
