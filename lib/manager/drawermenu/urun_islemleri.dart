@@ -12,13 +12,6 @@ class _UrunIslemleriState extends State<UrunIslemleri> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: FlatButton(
-          onPressed: (){
-            //Navigator.push(context, MaterialPageRoute(builder: (context) => FontKullanimi()));
-            Navigator.pushNamed(context, "/AnaEkran");
-          },
-          child: Icon(Icons.arrow_back,color: Colors.white),
-        ),
         title: Text("Ürün işlemleri"),
       ),
       body: Container(
@@ -155,10 +148,11 @@ class _UrunIslemleriState extends State<UrunIslemleri> {
                         Navigator.pushNamed(context, "/SutVeSutUrunleri");
                       },
                     ),
-                    Container(child: Text(
-                      "Süt ve Süt Ürünleri",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16, color: Colors.black,fontWeight: FontWeight.w700),
+                    Container(
+                      child: Text(
+                        "Süt ve Süt Ürünleri",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16, color: Colors.black,fontWeight: FontWeight.w700),
                     ),)
                   ],
                 ),

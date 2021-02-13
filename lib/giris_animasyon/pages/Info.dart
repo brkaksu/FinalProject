@@ -4,7 +4,6 @@ import '../widgets/animated/ripple.dart';
 import 'dart:async';
 
 import '../routes/fadeInFadeOutRoute.dart';
-import 'gecis.dart';
 
 class Info extends StatefulWidget {
   Info({Key key}) : super(key: key);
@@ -21,8 +20,7 @@ class _State extends State<Info> {
 
   void handleTimeout() {
     Navigator.pop(context);
-    Navigator.push(
-        context, FadeInFadeOutRoute(builder: (context) => new UserForm()));
+    Navigator.pushReplacement(context, FadeInFadeOutRoute(builder: (context) => new UserForm()));
   }
 
   initState() {

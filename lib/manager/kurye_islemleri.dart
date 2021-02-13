@@ -36,14 +36,11 @@ class _KuryeIslemleriState extends State<KuryeIslemleri> {
     tumKuryeler = [];
     _firebaseFirestore.collection('Kuryeler').get().then((gelenVeri){
       for(int i = 0 ; i<gelenVeri.docs.length ; i++){
-        //debugPrint(gelenVeri.docs[i].data()['Ürün Adı']);
-        okunanKuryeID = gelenVeri.docs[i].data()['Kurye ID'];
-        //debugPrint(okunanUrunID);
-        okunanKuryeAd = gelenVeri.docs[i].data()['Kurye Adı'];
-        //debugPrint(okunanUrunAd);
-        okunanKuryeTelNo = gelenVeri.docs[i].data()['Kurye TelNo'];
-        //debugPrint(okunanUrunFiyat);
-        //gecici.add(Urun(ad: okunanUrunAd, fiyat: okunanUrunFiyat, urunID:okunanUrunID));
+        setState(() {
+          okunanKuryeID = gelenVeri.docs[i].data()['Kurye ID'];
+          okunanKuryeAd = gelenVeri.docs[i].data()['Kurye Adı'];
+          okunanKuryeTelNo = gelenVeri.docs[i].data()['Kurye TelNo'];
+        });
         tumKuryeler.add(Urun(urunID: okunanKuryeID, ad: okunanKuryeAd, fiyat: okunanKuryeTelNo));
       }
     });
@@ -61,19 +58,12 @@ class _KuryeIslemleriState extends State<KuryeIslemleri> {
             formKey.currentState.save();
             formKey.currentState.reset();
           }
-          _firebaseFirestore.collection('Kuryeler').doc('KR${urunID}').set(kuryebilgial());
+          _firebaseFirestore.collection('Kuryeler').doc('KR$urunID').set(kuryebilgial());
           //image = null;
         },
         child: Icon(Icons.add),
       ),
       appBar: AppBar(
-        leading: FlatButton(
-          onPressed: (){
-            //Navigator.push(context, MaterialPageRoute(builder: (context) => FontKullanimi()));
-            Navigator.pushNamed(context, "/AnaEkran");
-          },
-          child: Icon(Icons.arrow_back,color: Colors.white),
-        ),
         title: Text("Kurye İşlemleri"),
       ),
       body: Container(
@@ -95,7 +85,7 @@ class _KuryeIslemleriState extends State<KuryeIslemleri> {
                         border: Border.all(color: Colors.blue,width: 3),
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
-                      child: Center(child: Text("Kurye ID: KR${urunID}", style: TextStyle(fontSize: 20))),
+                      child: Center(child: Text("Kurye ID: KR$urunID", style: TextStyle(fontSize: 20))),
                     ),
                     Divider(thickness:1,color: Colors.black,),
                     Row(
@@ -242,7 +232,7 @@ class _KuryeIslemleriState extends State<KuryeIslemleri> {
                 color: Colors.red,
                 onPressed: (){
                   _firebaseFirestore.collection('Kuryeler').doc('KR${tumKuryeler[index].urunID}').delete();
-                  tumKuryeler.removeWhere((element) => element.urunID == '${index}');
+                  tumKuryeler.removeWhere((element) => element.urunID == '$index');
                 },
               ),
             ],
@@ -255,9 +245,9 @@ class _KuryeIslemleriState extends State<KuryeIslemleri> {
                 formKey.currentState.save();
                 //debugPrint(urunID + "--" + urunAdi + "--" + urunFiyat);
                 _firebaseFirestore.collection('Kuryeler').doc('KR${tumKuryeler[index].urunID}').update({
-                  'Kurye Adı' : '${urunAdi}',
-                  'Kurye TelNo' : '${urunFiyat}',
-                  'Kurye ID' : '${urunID}',
+                  'Kurye Adı' : '$urunAdi',
+                  'Kurye TelNo' : '$urunFiyat',
+                  'Kurye ID' : '$urunID',
                 });
               });
             },
@@ -280,7 +270,7 @@ class _KuryeIslemleriState extends State<KuryeIslemleri> {
     setState(() {
       urunResimler.add(File(pickedFile.path));
       image = File(pickedFile.path);
-      debugPrint("Resim yolu listeye eklendi yol : ${pickedFile.path}");
+      //debugPrint("Resim yolu listeye eklendi yol : ${pickedFile.path}");
     });
   }
 

@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -60,18 +59,23 @@ class _FirestoreIslemleriState extends State<FirestoreIslemleri> {
             ),
 
             RaisedButton(
+              onPressed: (){},
               child: Text("Galeriden Storagea Resim"),
               color: Colors.orange,
               //onPressed: _galeriResimUpload,
             ),
             RaisedButton(
+              onPressed: (){},
               child: Text("Kameradan Storagea Resim"),
               color: Colors.purple,
               //onPressed: _kameraResimUpload,
             ),
+
+            /*
             Expanded(
-              //child: _secilenResim == null? Text("Resim YOK"): Image.file(File(_secilenResim.path)),
+              child: _secilenResim == null ? Text("Resim YOK"): Image.file(File(_secilenResim.path)),
             ),
+            */
           ],
         ),
       ),
@@ -169,19 +173,15 @@ class _FirestoreIslemleriState extends State<FirestoreIslemleri> {
 
   Future _veriOku() async {
     //tek bir dökümanın okunması
-    DocumentSnapshot documentSnapshot =
-    await _firestore.doc("users/emre_altunbilek").get();
+    DocumentSnapshot documentSnapshot = await _firestore.doc("users/emre_altunbilek").get();
     debugPrint("Döküman id:" + documentSnapshot.id);
     debugPrint("Döküman var mı:" + documentSnapshot.exists.toString());
     debugPrint("Döküman string: " + documentSnapshot.toString());
-    debugPrint("bekleyen yazma var mı:" +
-        documentSnapshot.metadata.hasPendingWrites.toString());
-    debugPrint("cacheden mi geldi:" +
-        documentSnapshot.metadata.isFromCache.toString());
+    debugPrint("bekleyen yazma var mı:" + documentSnapshot.metadata.hasPendingWrites.toString());
+    debugPrint("cacheden mi geldi:" + documentSnapshot.metadata.isFromCache.toString());
     debugPrint("cacheden mi geldi:" + documentSnapshot.data().toString());
     debugPrint("cacheden mi geldi:" + documentSnapshot.data()['ad']);
-    debugPrint(
-        "cacheden mi geldi:" + documentSnapshot.data()['para'].toString());
+    debugPrint("cacheden mi geldi:" + documentSnapshot.data()['para'].toString());
     documentSnapshot.data().forEach((key, deger) {
       debugPrint("key : $key deger :deger");
     });
@@ -195,8 +195,7 @@ class _FirestoreIslemleriState extends State<FirestoreIslemleri> {
       }
 
       //anlık değişikliklerin dinlenmesi
-      DocumentReference ref =
-      _firestore.collection("users").doc("emre_altunbilek");
+      DocumentReference ref = _firestore.collection("users").doc("emre_altunbilek");
       ref.snapshots().listen((degisenVeri) {
         debugPrint("anlık :" + degisenVeri.data().toString());
       });

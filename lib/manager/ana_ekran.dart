@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/manager/drawermenu/drawer_menu.dart';
 import 'package:flutter_firebase/manager/drawermenu/urun_islemleri.dart';
@@ -8,11 +9,15 @@ import 'package:flutter_firebase/manager/siparisler.dart';
 import 'ilkEkran.dart';
 
 class AnaEkran extends StatefulWidget {
+  FirebaseAuth firebaseAuthManager;
+  AnaEkran({this.firebaseAuthManager});
   @override
   _AnaEkranState createState() => _AnaEkranState();
 }
 
 class _AnaEkranState extends State<AnaEkran> {
+
+
   int secilenmenuItem = 0;
   List<Widget> tumSayfalar;
   IlkEkran sayfaAna;
@@ -26,17 +31,16 @@ class _AnaEkranState extends State<AnaEkran> {
     siparisler = Siparisler();
     profil = Profil();
     tumSayfalar = [sayfaAna, siparisler, profil];
+    //debugPrint( "Ana sayfa _auth kontrolü:" + widget.firebaseAuthManager.currentUser.toString());
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      drawer: DrawerMenu(),
+      drawer: DrawerMenu(firebaseAuthYonetici: widget.firebaseAuthManager),
       appBar: AppBar(
-        title: Text(
-          "Flat Market",
-          style: TextStyle(fontFamily: "Font3",fontSize: 25),
-        ),
+        title: Text("Flat Market", style: TextStyle(fontFamily: "Font3", fontSize: 25)),
         centerTitle: true,
       ),
       body: tumSayfalar[secilenmenuItem],
@@ -67,7 +71,7 @@ class _AnaEkranState extends State<AnaEkran> {
         ],
         type: BottomNavigationBarType.shifting,
         currentIndex: secilenmenuItem,
-        onTap: (index){
+        onTap: (index) {
           setState(() {
             secilenmenuItem = index;
           });

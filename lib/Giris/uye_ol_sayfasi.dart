@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_firebase/Giris/login_islemleri.dart';
+
 
 class UyeOl extends StatefulWidget {
   FirebaseAuth _auth;
-
   UyeOl(this._auth);
 
   @override
@@ -26,6 +25,7 @@ class _UyeOlState extends State<UyeOl> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint( "Üyeol dayız: " + widget._auth.currentUser.toString());
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -215,14 +215,15 @@ class _UyeOlState extends State<UyeOl> {
                 onSaved: (girilenSifre){
                   _kullaniciPassword = girilenSifre;
                 },
-
               ),
               SizedBox(height: 10),
-
               // GirişButonu
               RaisedButton.icon(
-                icon: Icon(Icons.arrow_forward),
-                label: Text("Kayıt Ol"),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                ),
+                icon: Icon(Icons.arrow_forward,color: Colors.white,),
+                label: Text("Kayıt Ol",style: TextStyle(color: Colors.white),),
                 onPressed: _emailSifreKullaniciOlustur,
                 color: Colors.blueAccent,
               ),

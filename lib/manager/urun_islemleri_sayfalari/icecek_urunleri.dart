@@ -55,7 +55,7 @@ class _IcecekUrunleriState extends State<IcecekUrunleri> {
             formKey.currentState.save();
             formKey.currentState.reset();
           }
-          _firebaseFirestore.collection('Ürünler').doc('İçecekÜrünleri').collection('Ürünler').doc('Ic${urunID}').set(icecekUrunleriGetir());
+          _firebaseFirestore.collection('Ürünler').doc('İçecekÜrünleri').collection('Ürünler').doc('Ic$urunID').set(icecekUrunleriGetir());
           image = null;
         },
         child: Icon(Icons.add),
@@ -81,7 +81,7 @@ class _IcecekUrunleriState extends State<IcecekUrunleri> {
                         border: Border.all(color: Colors.blue, width: 3),
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
-                      child: Center(child: Text("Ürün ID: Ic${urunID}", style: TextStyle(fontSize: 20))),
+                      child: Center(child: Text("Ürün ID: Ic$urunID", style: TextStyle(fontSize: 20))),
                     ),
                     Divider(thickness:1,color: Colors.black,),
                     Row(
@@ -240,9 +240,9 @@ class _IcecekUrunleriState extends State<IcecekUrunleri> {
                 formKey.currentState.save();
                 //debugPrint(urunID + "--" + urunAdi + "--" + urunFiyat);
                 _firebaseFirestore.collection('Ürünler').doc('İçecekÜrünleri').collection('Ürünler').doc('Ic${icecekUrunler[index].urunID}').update({
-                  'Ürün Adı' : '${urunAdi}',
-                  'Ürün Fiyatı' : '${urunFiyat}',
-                  'Ürün ID' : '${urunID}',
+                  'Ürün Adı' : '$urunAdi',
+                  'Ürün Fiyatı' : '$urunFiyat',
+                  'Ürün ID' : '$urunID',
                 });
               });
             },
