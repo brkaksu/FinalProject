@@ -3,19 +3,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/Giris/uye_ol_sayfasi.dart';
-import 'package:flutter_firebase/giris_animasyon/pages/Info.dart';
 import 'package:flutter_firebase/manager/ana_ekran.dart';
 
 import '../user/form_user.dart';
 
- FirebaseAuth _auth = FirebaseAuth.instance;
-  
 class LoginIslemleri extends StatefulWidget {
   @override
   _LoginIslemleriState createState() => _LoginIslemleriState();
 }
 
 class _LoginIslemleriState extends State<LoginIslemleri> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  TextEditingController emailcontroller = TextEditingController();
+  TextEditingController sifrecontroller = TextEditingController();
   String _email ="";
   String _password = "";
   var girisKey = GlobalKey<FormState>();
@@ -24,13 +25,10 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
   void initState() {
     super.initState();
     _auth.authStateChanges().listen((User user) {
-      // ilk girişte Giriş yapmış bir kullanıcı var ise sistemi boşaltıyor
       if (user == null) {
-        print('User is currently signed out!');
-      } else {
-        print('User is signed in!');
-        _auth.signOut();
-        print("User is currently signed out!");
+        debugPrint('Giriş yapmış bir kullanıcı yok!');
+      } else{
+        debugPrint('Giriş Yapmış bir kullanıcı var Email: ${_auth.currentUser.email}');
       }
     });
   }
@@ -44,52 +42,63 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
       ),
       body: Container(
         padding: EdgeInsets.all(20.0),
-        alignment: Alignment.center,
         child: Form(
           key: girisKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           child: ListView(
             children: <Widget>[
               //Email giriş
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.email),
-                  hintText: "E mail",
-                  labelText: "E mail",
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.purple, width: 3),
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              Container(
+                child: TextFormField(
+                  controller: emailcontroller,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.email),
+                    hintText: "E mail",
+                    labelText: "E mail",
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.purple, width: 3),
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.purple, width: 3),
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red, width: 3),
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
+                    // standart hali
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.purple, width: 3),
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.red, width: 3),
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.purple, width: 3),
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.purple, width: 3),
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red, width: 3),
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  ),
+                  validator: (String girilenVeri){
+                    if (!(girilenVeri.contains("@gmail.com")|| girilenVeri.contains("@hotmail.com") || girilenVeri.contains("@outlook.com") || girilenVeri.contains("@bil.omu.edu.tr"))){
+                      return "Lütfen geçerli bir e mail giriniz";
+                    }else {
+                    return null;
+                    }
+                  },
+                  onSaved: (girilenEmail){
+                    if(girilenEmail.isEmpty){
+                      debugPrint("durum if e düstü!!!!");
+                      _showDialog();
+                    }
+                    _email = girilenEmail;
+                  },
                 ),
-                validator: (String girilenVeri){
-                  if (!(girilenVeri.contains("@gmail.com")|| girilenVeri.contains("@hotmail.com") || girilenVeri.contains("@outlook.com") || girilenVeri.contains("@bil.omu.edu.tr"))){
-                    return "Lütfen geçerli bir e mail giriniz";
-                  }else {
-                  return null;
-                  }
-                },
-                onSaved: (girilenEmail){
-                  _email = girilenEmail;
-                },
               ),
               SizedBox(height: 10),
               //Şifre Giriş
               TextFormField(
-                obscureText: true,
                 keyboardType: TextInputType.visiblePassword,
+                obscureText: true,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.lock),
                   hintText: "Şifre",
@@ -106,6 +115,11 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
                     borderSide: BorderSide(color: Colors.purple, width: 3),
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red, width: 3),
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  ),
+
                 ),
                 validator: (String girilenVeri){
                   if(girilenVeri.length <= 6 ){
@@ -120,32 +134,41 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
 
               ),
               SizedBox(height: 10),
-
               // GirişButonu
-              RaisedButton.icon(
-                icon: Icon(Icons.arrow_forward),
-                label: Text("Giriş Yap"),
-                onPressed: _emailSifreKullaniciGirisyap,
-                color: Colors.blueAccent,
-              ),
 
-              //------------------------------
-              //Üye ol sayfasi
               RaisedButton.icon(
-                icon: Icon(Icons.person),
-                  label: Text("Üye Ol"),
-                  color: Colors.blueAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  side: BorderSide(color: Colors.purple),
+                ),
+                icon: Icon(Icons.arrow_forward,color: Colors.white,),
+                label: Text("Giriş Yap",style: TextStyle(color: Colors.white),),
+                color: Colors.purple,
+                onPressed: _emailSifreKullaniciGirisyap,
+              ),
+              //Üye ol Butonu
+              RaisedButton.icon(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    side: BorderSide(color: Colors.purple),
+                  ),
+                icon: Icon(Icons.person,color: Colors.white,),
+                  label: Text("Üye Ol",style: TextStyle(color: Colors.white),),
+                  color: Colors.purple,
                   onPressed: (){
                      Navigator.push(context, MaterialPageRoute(builder: (context) => UyeOl(_auth)));
                   }),
+              // cıkıs yap
+              RaisedButton(
+                child: Text("Kullanıcı oluştur"),
+                onPressed: _cikisYap,
+                color: Colors.deepOrange,
+              ),
               RaisedButton(
                 child: Text("Çıkış Yap"),
                 onPressed: _cikisYap,
                 color: Colors.deepOrange,
               ),
-
-
-
             ],
           ),
         ),
@@ -153,136 +176,49 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
     );
   }
 
-  void _emailSifreKullaniciOlustur() async {
-    String _email = "hakan.dursun@bil.omu.edu.tr";
-    String _password = "password";
-    try {
-      UserCredential _credential = await _auth.createUserWithEmailAndPassword(
-          email: _email, password: _password);
-      User _newUser = _credential.user;
-      //debugPrint(_newUser.toString());
-      await _newUser.sendEmailVerification();
-      if (_auth.currentUser != null) {
-        debugPrint("Size bir e mail yolladık lütfen onaylayın");
-        await _auth.signOut();
-        debugPrint("Kullanıcı sistemden atıldı.");
-      }
-    } catch (e) {
-      debugPrint("**************HATA VAR!!!************");
-      debugPrint(e.toString());
-    }
-  }
-
   void _emailSifreKullaniciGirisyap() async {
-    //debugPrint(_auth.toString());
     girisKey.currentState.save();
-
+    //debugPrint("save methodu calisti amaa ???");
     try {
-      // eger giriş yapmış kullanıcı yoksa
-      if (_auth.currentUser == null) {
-        //debugPrint(_email + "--" +_password);
+        // eger giriş yapmış kullanıcı yoksa
+        if (_auth.currentUser == null) {
+          // Yönetici kontolü
+          _firebaseFirestore.collection("yönetici").get().then((gelenVeri) async {
+            //debugPrint("Okunması istenen değer: " + gelenVeri.docs[0].data().toString());
+            for(int i= 0; i<gelenVeri.docs.length; i++){
+              if((gelenVeri.docs[i].data()['Email']).toString() == _email){
+                User _oturumAcanYonetici = (await _auth.signInWithEmailAndPassword(email: _email, password: _password)).user;
+                //debugPrint("Login Sayfası oturum açan yonetici email:  "+ _oturumAcanYonetici.email);
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AnaEkran(firebaseAuthManager: _auth)));
+              }
+            }
+          });
 
-        //Yönetici
-        if(_email =="brk.aksu60@gmail.com"){
-          await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AnaEkran()));
-        }else{
-          if(_email == "burakaksu576@gmail.com" || _email == "hakandursun175@hotmail.com"){
-            await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Info()));
-          }else{
-            _showDialog();
-          }
-        }
-
+          // Uye kontrolü
+          _firebaseFirestore.collection("users").get().then((gelenVeri) async {
+            for(int i=0; i< gelenVeri.docs.length; i++){
+              if(gelenVeri.docs[i].data()['Email'].toString() == _email){
+                User _oturumAcanUser = (await _auth.signInWithEmailAndPassword(email: _email, password: _password)).user;
+                debugPrint(_oturumAcanUser.toString());
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UserForm()));
+              }
+            }
+          });
       } else {
         // giriş yapmış bir kullanıcı
         debugPrint("Zaten giriş yapmış bir kullanıcı var");
       }
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint("Oturum Açarken HATA!:" + e.toString());
     }
-  }
 
-  void _resetPassword() async {
-    String _email = "burakaksu576@gmail.com";
-    try {
-      await _auth.sendPasswordResetEmail(email: _email);
-    } catch (e) {
-      debugPrint("HATA: Şifre resetlenirken " + e.toString() + "hatası ile karşılaşıldı");
-    }
-  }
-
-  void _updatePassword() async {
-    try {
-      // Bu blok yakın zamanda oturum açılma işlemi gerçekleştirilmiş ise çalıştırılacaktır
-      // şifre güncelleme işlemi  <updatePassword>
-      await _auth.currentUser.updatePassword("password3");
-      debugPrint("Şifre başarılı şekilde güncellendi");
-    } catch (e) {
-
-      // Bu blok ise yakın zamanda oturum açılmadığı için hata alıp çalışacaktır
-      try{
-        // tekrar kullanıcı adı ve şifre alınıyor
-        String email = 'burakaksu576@gmail.com';
-        String password = 'password3';
-
-        // Yeni bir kimlik yaratılıyor.
-        EmailAuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
-
-        // tekrar oturum açma işlemi yapılıyor.
-        await FirebaseAuth.instance.currentUser.reauthenticateWithCredential(credential);
-        debugPrint("Girilen eski email ve şifre bilgisi doğru");
-        // şifre güncelleme işlemi tekrar deneniyor
-        await _auth.currentUser.updatePassword("password3");
-        debugPrint("Şifre tekrar deneme sonucu başarılı şekilde güncellendi");
-      }catch(e){
-        debugPrint("HATA : ${e.toString()}");
-      }
-      debugPrint("HATA: Şifre güncellenirken" + e.toString() + "hatası ile karşılaşıldı");
-    }
-  }
-
-  void _updateEmail() async {
-    try {
-      // emaili güncelle
-      await _auth.currentUser.updateEmail("burakaksu576@gmail.com");
-      debugPrint("Email başarılı şekilde güncellendi");
-    } catch (e) {
-      // Belli bir süre sonra kullanıcı önceden giriş yapmış olsa bile
-      // sistem güncelleme için tekrar giriş yapmasını istiyor.
-      // hata durumunda bu yapıya giren sistemi kullanıcının tekrar giriş yapması
-      // sağlanarak işlemi başarılı bir şekilde yürütebiliyoruz.
-      try{
-        // kullanıcının tekrar email ve şifre bilgisi alınıyor.
-        String email = 'burakaksu576@gmail.com';
-        String password = 'password3';
-
-        // Yeni bir kimlik oluşturuluyor.
-        EmailAuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
-
-        // oluşturulan kimlikle tekrar oturum açılıyor
-        await FirebaseAuth.instance.currentUser.reauthenticateWithCredential(credential);
-
-        debugPrint("Girilen eski email ve şifre bilgisi doğru");
-
-        // e mail güncelleme işlemi tekrar deneniyor
-        await _auth.currentUser.updateEmail("burakaksu576@gmail.com");
-        debugPrint("Email tekrar deneme sonucu başarılı şekilde güncellendi");
-      }catch(e){
-        debugPrint("HATA: " + e.toString());
-      }
-
-
-
-      debugPrint("HATA: Email güncellenirken" + e.toString() + "hatası ile karşılaşıldı");
-    }
   }
 
   void _cikisYap() async {
     try {
       // sistemde kullanıcı varsa çıkış yap
       if (_auth.currentUser != null) {
+        debugPrint("${_auth.currentUser.email} sistemden çıkıyor");
         await _auth.signOut();
       } else {
         // sistemde zaten bir kullanıcı yoksa sorun yok
@@ -292,20 +228,22 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
       debugPrint(e.toString());
     }
   }
+
   void _showDialog(){
     showDialog(
         context: context,
         builder: (BuildContext context){
           return AlertDialog(
             title: Text("Giriş Yap"),
-            content: Text("Sistemde kayıtlı değilsiniz\n Üye Olun"),
+            content: Text("Lütfen email ve şifrenizi kontrol edin..."),
             actions: <Widget>[
               FlatButton(
+                child: Text("Tamam"),
                   onPressed: (){
                     girisKey.currentState.reset();
                     Navigator.of(context).pop();
                   },
-                  child: Text("Tamam")),
+                  ),
             ],
           );
         }

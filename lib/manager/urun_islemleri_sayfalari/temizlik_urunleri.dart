@@ -56,7 +56,7 @@ class _TemizlikUrunleriState extends State<TemizlikUrunleri> {
             formKey.currentState.save();
             formKey.currentState.reset();
           }
-          _firebaseFirestore.collection('Ürünler').doc('TemizlikÜrünleri').collection('Ürünler').doc('TM${urunID}').set(temizlikUrunleriGetir());
+          _firebaseFirestore.collection('Ürünler').doc('TemizlikÜrünleri').collection('Ürünler').doc('TM$urunID').set(temizlikUrunleriGetir());
           image = null;
         },
         child: Icon(Icons.add),
@@ -82,7 +82,7 @@ class _TemizlikUrunleriState extends State<TemizlikUrunleri> {
                         border: Border.all(color: Colors.blue,width: 3),
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
-                      child: Center(child: Text("Ürün ID: TM${urunID}", style: TextStyle(fontSize: 20))),
+                      child: Center(child: Text("Ürün ID: TM$urunID", style: TextStyle(fontSize: 20))),
                     ),
                     Divider(thickness:1,color: Colors.black,),
                     Row(
@@ -240,9 +240,9 @@ class _TemizlikUrunleriState extends State<TemizlikUrunleri> {
                 formKey.currentState.save();
                 //debugPrint(urunID + "--" + urunAdi + "--" + urunFiyat);
                 _firebaseFirestore.collection('Ürünler').doc('TemizlikÜrünleri').collection('Ürünler').doc('TM${temizlikUrunler[index].urunID}').update({
-                  'Ürün Adı' : '${urunAdi}',
-                  'Ürün Fiyatı' : '${urunFiyat}',
-                  'Ürün ID' : '${urunID}',
+                  'Ürün Adı' : '$urunAdi',
+                  'Ürün Fiyatı' : '$urunFiyat',
+                  'Ürün ID' : '$urunID',
               });
             },
           ),
@@ -278,7 +278,7 @@ class _TemizlikUrunleriState extends State<TemizlikUrunleri> {
   }
   Future _verioku() async{
     try{
-      DocumentSnapshot documentSnapshot = await _firebaseFirestore.doc("Ürünler/SebzeveMeyveler/Sebzeler/${urunAdi}").get();
+      DocumentSnapshot documentSnapshot = await _firebaseFirestore.doc("Ürünler/SebzeveMeyveler/Sebzeler/$urunAdi").get();
       //okunanUrunAd = documentSnapshot.data()['Ürün Adı'];
       //debugPrint("Okunan veri ad:  "+okunanUrunAd);
       //okunanUrunFiyat = documentSnapshot.data()['Ürün Fiyatı'];

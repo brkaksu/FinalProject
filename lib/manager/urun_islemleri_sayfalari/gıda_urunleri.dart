@@ -57,7 +57,7 @@ class _GidaUrunleriState extends State<GidaUrunleri> {
             formKey.currentState.save();
             formKey.currentState.reset();
           }
-          _firebaseFirestore.collection('Ürünler').doc('GidaÜrünleri').collection('Ürünler').doc('GD${urunID}').set(gidaUrunleriGetir());
+          _firebaseFirestore.collection('Ürünler').doc('GidaÜrünleri').collection('Ürünler').doc('GD$urunID').set(gidaUrunleriGetir());
           image = null;
         },
         child: Icon(Icons.add),
@@ -83,7 +83,7 @@ class _GidaUrunleriState extends State<GidaUrunleri> {
                         border: Border.all(color: Colors.blue, width: 3),
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
-                      child: Center(child: Text("Ürün ID: GD${urunID}", style: TextStyle(fontSize: 20,))),
+                      child: Center(child: Text("Ürün ID: GD$urunID", style: TextStyle(fontSize: 20,))),
                     ),
                     Divider(thickness:1,color: Colors.black,),
                     Row(
@@ -242,9 +242,9 @@ class _GidaUrunleriState extends State<GidaUrunleri> {
                 formKey.currentState.save();
                 //debugPrint(urunID + "--" + urunAdi + "--" + urunFiyat);
                 _firebaseFirestore.collection('Ürünler').doc('GidaÜrünleri').collection('Ürünler').doc('GD${gidaUrunler[index].urunID}').update({
-                  'Ürün Adı' : '${urunAdi}',
-                  'Ürün Fiyatı' : '${urunFiyat}',
-                  'Ürün ID' : '${urunID}',
+                  'Ürün Adı' : '$urunAdi',
+                  'Ürün Fiyatı' : '$urunFiyat',
+                  'Ürün ID' : '$urunID',
                 });
               });
             },

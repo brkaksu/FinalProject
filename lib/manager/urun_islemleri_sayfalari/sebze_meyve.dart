@@ -40,16 +40,11 @@ class _SebzeMeyveState extends State<SebzeMeyve> {
     }
     _firebaseFirestore.collection('Ürünler/SebzeveMeyveler/Ürünler').get().then((gelenVeri){
         for(int i = 0 ; i<gelenVeri.docs.length ; i++){
-          //debugPrint(gelenVeri.docs[i].data()['Ürün Adı']);
           setState(() {
-          okunanUrunID = gelenVeri.docs[i].data()['Ürün ID'];
-          //debugPrint(okunanUrunID);
-          okunanUrunAd = gelenVeri.docs[i].data()['Ürün Adı'];
-          //debugPrint(okunanUrunAd);
-          okunanUrunFiyat = gelenVeri.docs[i].data()['Ürün Fiyatı'];
+            okunanUrunID = gelenVeri.docs[i].data()['Ürün ID'];
+            okunanUrunAd = gelenVeri.docs[i].data()['Ürün Adı'];
+            okunanUrunFiyat = gelenVeri.docs[i].data()['Ürün Fiyatı'];
           });
-          //debugPrint(okunanUrunFiyat);
-          //gecici.add(Urun(ad: okunanUrunAd, fiyat: okunanUrunFiyat, urunID:okunanUrunID));
           sebzeler.add(Urun(urunID: okunanUrunID, ad: okunanUrunAd, fiyat: okunanUrunFiyat));
         }
       });
@@ -90,7 +85,7 @@ class _SebzeMeyveState extends State<SebzeMeyve> {
                 formKey.currentState.reset();
               }
               // Firebase e yeni ürün ekleme işlemi gerçekleşiyor.
-              _firebaseFirestore.collection('Ürünler').doc('SebzeveMeyveler').collection('Ürünler').doc('SM${urunID}').set(sebzeUrunleriGetir());
+              _firebaseFirestore.collection('Ürünler').doc('SebzeveMeyveler').collection('Ürünler').doc('SM$urunID').set(sebzeUrunleriGetir());
               //image = null;
             },
           ),
@@ -117,7 +112,7 @@ class _SebzeMeyveState extends State<SebzeMeyve> {
                         border: Border.all(color: Colors.blue,width: 3),
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
-                      child: Center(child: Text("Ürün ID: SM${urunID}", style: TextStyle(fontSize: 20))),
+                      child: Center(child: Text("Ürün ID: SM$urunID", style: TextStyle(fontSize: 20))),
                     ),
                     Divider(thickness:1,color: Colors.black,),
                     Row(
@@ -264,7 +259,6 @@ class _SebzeMeyveState extends State<SebzeMeyve> {
                     urunFiyatController.text = sebzeler[index].fiyat;
                     urunID = sebzeler[index].urunID;
                   });
-
                 },
               ),
               RaisedButton(
@@ -272,7 +266,7 @@ class _SebzeMeyveState extends State<SebzeMeyve> {
                 color: Colors.red,
                 onPressed: (){
                   _firebaseFirestore.collection('Ürünler').doc('SebzeveMeyveler').collection('Ürünler').doc('SM${sebzeler[index].urunID}').delete();
-                  sebzeler.removeWhere((element) => element.urunID == '${index}');
+                  sebzeler.removeWhere((element) => element.urunID == '$index');
                 },
               ),
             ],
@@ -285,9 +279,9 @@ class _SebzeMeyveState extends State<SebzeMeyve> {
                 formKey.currentState.save();
                 //debugPrint(urunID + "--" + urunAdi + "--" + urunFiyat);
                 _firebaseFirestore.collection('Ürünler').doc('SebzeveMeyveler').collection('Ürünler').doc('SM${sebzeler[index].urunID}').update({
-                  'Ürün Adı' : '${urunAdi}',
-                  'Ürün Fiyatı' : '${urunFiyat}',
-                  'Ürün ID' : '${urunID}',
+                  'Ürün Adı' : '$urunAdi',
+                  'Ürün Fiyatı' : '$urunFiyat',
+                  'Ürün ID' : '$urunID',
                 });
               });
             },
@@ -315,16 +309,14 @@ class _SebzeMeyveState extends State<SebzeMeyve> {
   }
 
   Map<String, dynamic> sebzeUrunleriGetir() {
-    sebzeUrunleri['Ürün ID'] = "${urunID}";
+    sebzeUrunleri['Ürün ID'] = urunID;
     sebzeUrunleri['Ürün Adı'] = urunAdi;
-    //debugPrint("Yazdırılan ürün adı:"+urunAdi);
     sebzeUrunleri['Ürün Fiyatı'] = urunFiyat;
-    //debugPrint("Yazdırılan ürün fiyatı:"+urunFiyat);
     return sebzeUrunleri;
   }
   Future _verioku() async{
     try{
-      DocumentSnapshot documentSnapshot = await _firebaseFirestore.doc("Ürünler/SebzeveMeyveler/Sebzeler/${urunAdi}").get();
+      DocumentSnapshot documentSnapshot = await _firebaseFirestore.doc("Ürünler/SebzeveMeyveler/Sebzeler/$urunAdi").get();
         //okunanUrunAd = documentSnapshot.data()['Ürün Adı'];
         //debugPrint("Okunan veri ad:  "+okunanUrunAd);
         //okunanUrunFiyat = documentSnapshot.data()['Ürün Fiyatı'];

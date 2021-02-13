@@ -1,6 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase/user/form_user.dart';
 import 'package:flutter_firebase/user/kullanici_et.dart';
 import 'package:flutter_firebase/user/kullanici_gida.dart';
 import 'package:flutter_firebase/user/kullanici_icecek.dart';
@@ -9,7 +8,6 @@ import 'package:flutter_firebase/user/kullanici_sut.dart';
 import 'package:flutter_firebase/user/kullanici_temizlik.dart';
 import 'package:flutter_firebase/user/sepet.dart';
 import 'file:///D:/AndroidStudioProjects/flutter_firebase/lib/Giris/login_islemleri.dart';
-import 'giris_animasyon/pages/Info.dart';
 import 'manager/ana_ekran.dart';
 import 'manager/urun_islemleri_sayfalari/et_ve_et_urunleri.dart';
 import 'manager/urun_islemleri_sayfalari/gıda_urunleri.dart';
@@ -46,6 +44,7 @@ class MyApp extends StatelessWidget {
         "/KullaniciIcecek" : (context) => KullaniciIcecekUrunleri(),
         "/KullaniciTemizlik" : (context) => KullaniciTemizlikUrunleri(),
         "/Sepet" : (context) => Sepet(),
+        "/Login" : (context) => LoginIslemleri(),
       },
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
@@ -76,8 +75,8 @@ class App extends StatelessWidget {
           );
         }
         // Once complete, show your application
-        if (snapshot.connectionState == ConnectionState.done) {
-          return AnaEkran();
+        if (snapshot.connectionState == ConnectionState.done){
+          return LoginIslemleri();
         }
         // Otherwise, show something whilst waiting for initialization to complete
         return Scaffold(

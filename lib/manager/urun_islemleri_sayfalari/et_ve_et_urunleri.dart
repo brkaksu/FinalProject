@@ -60,7 +60,7 @@ class _EtveEtUrunleriState extends State<EtveEtUrunleri> {
             formKey.currentState.save();
             formKey.currentState.reset();
           }
-          _firebaseFirestore.collection('Ürünler').doc('EtÜrünleri').collection('Ürünler').doc('ET${urunID}').set(etUrunleriGetir());
+          _firebaseFirestore.collection('Ürünler').doc('EtÜrünleri').collection('Ürünler').doc('ET$urunID').set(etUrunleriGetir());
         },
         child: Icon(Icons.add),
       ),
@@ -85,7 +85,7 @@ class _EtveEtUrunleriState extends State<EtveEtUrunleri> {
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                       child: Center(
-                          child: Text("Ürün ID: ET${urunID}",
+                          child: Text("Ürün ID: ET$urunID",
                               style: TextStyle(fontSize: 20))),
                     ),
                     Divider(
@@ -284,9 +284,9 @@ class _EtveEtUrunleriState extends State<EtveEtUrunleri> {
               setState(() {
                 //debugPrint(urunID + "--" + urunAdi + "--" + urunFiyat);
                 _firebaseFirestore.collection('Ürünler').doc('EtÜrünleri').collection('Ürünler').doc('ET${etUrunler[index].urunID}').update({
-                  'Ürün Adı' : '${urunAdi}',
-                  'Ürün Fiyatı' : '${urunFiyat}',
-                  'Ürün ID' : '${urunID}',
+                  'Ürün Adı' : '$urunAdi',
+                  'Ürün Fiyatı' : '$urunFiyat',
+                  'Ürün ID' : '$urunID',
                 });
               });
             },

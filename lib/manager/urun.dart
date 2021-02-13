@@ -12,8 +12,8 @@ class Urun {
 
 class SepetUrun{
 
-  String Ad;
+  String ad;
   double fiyati;
 
-  SepetUrun({this.Ad, this.fiyati});
+  SepetUrun({this.ad, this.fiyati});
 }
